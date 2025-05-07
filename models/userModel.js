@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
     fullName: {
         type: String,
         required: true
@@ -26,12 +26,18 @@ const userSchema = mongoose.Schema({
         type: Date
     },
     role: {
-        type: Number,
-        default: 2
-         // admin 1
-        // users 2
-        // artisan 3
+        type: String,
+        enum: ['user' | 'artisan' | 'admin'],
+        default: 'user'
 
+    },
+    artisanProfile: {
+        bio: String,
+        skill: [String],
+        isApproved: {
+            type: Boolean,
+            default: false
+        }
     },
     createdOn: {
         type: Date,
