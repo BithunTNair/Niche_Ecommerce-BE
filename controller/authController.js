@@ -1,8 +1,11 @@
 const USERS = require('../models/userModel');
+const crypto = require('crypto');
+const bcrypt= require('bcrypt')
+const { sendOtp } = require('../utils/sendEmail')
 const userRegistartion = (req, res) => {
     const { fullName, email, mobileNumber } = req.body;
     try {
-        const user = USERS({
+        const user = new USERS({
             fullName: fullName,
             email: email,
             mobileNumber: mobileNumber,
@@ -47,9 +50,10 @@ const generateOTP = async (req, res) => {
 };
 
 const verifyOTP = async (req, res) => {
+    const { id } = req.params;
+    const { otp } = req.body;
     try {
-        const { id } = req.params;
-        const currentUser = await USERS.findOne({ id });
+        const currentUser = await USERS.findById(id);
         console.log(currentUser);
 
         if (otp != currentUser.otp || currentUser.otpExpires < Date.now()) {

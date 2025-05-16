@@ -25,4 +25,4 @@ const sendOtp = async (mail, otp) => {
     }
 };
 
-module.exports = sendOtp
+module.exports ={ sendOtp}
