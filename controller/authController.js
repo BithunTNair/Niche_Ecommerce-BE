@@ -1,6 +1,7 @@
 const USERS = require('../models/userModel');
 const crypto = require('crypto');
-const bcrypt= require('bcrypt')
+const bcrypt= require('bcrypt');
+const jwt= require('jsonwebtoken');
 const { sendOtp } = require('../utils/sendEmail')
 const userRegistartion = (req, res) => {
     const { fullName, email, mobileNumber } = req.body;

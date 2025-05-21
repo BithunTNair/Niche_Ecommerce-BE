@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['user' , 'artisan' , 'admin'],
+        enum: ['user', 'artisan', 'admin'],
         default: 'user'
 
     },
@@ -37,6 +37,11 @@ const userSchema = new mongoose.Schema({
         isApproved: {
             type: Boolean,
             default: false
+        },
+        status: {
+            type: String,
+            enum: ['pending', 'approved','rejected'],
+            default: 'pending'
         }
     },
     createdOn: {
