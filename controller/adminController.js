@@ -1,6 +1,7 @@
 const USERS = require('../models/userModel');
 
 const approveArtisan = async (req, res) => {
+    const {bio, skill} = req.body
     const { userId } = req.params;
     try {
         const user = await USERS.findById(userId);

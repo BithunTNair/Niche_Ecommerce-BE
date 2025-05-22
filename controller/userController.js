@@ -1,4 +1,6 @@
 const PRODUCTS = require('../models/productModel');
+const CART = require('../models/cartModel');
+const USERS = require('../models/userModel');
 
 const getAllProducts = async (req, res) => {
 
@@ -11,4 +13,51 @@ const getAllProducts = async (req, res) => {
     }
 };
 
-module.exports = { getAllProducts }
+const addToCart = async (req, res) => {
+    const { userId } = req.params;
+    const { productId, quantity } = req.body;
+
+    try {
+        const user = await USERS.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'user not found' });
+        }
+        let cart = await CART.findOne({ userId });
+
+        if (cart) {
+            await cart.populate('products.productId');
+            const productIndex = cart.products.findIndex((p) => p.productId && p.productId._id && p.productId._id.toString() === productId);
+            if (productIndex > -1) {
+                cart.products[productIndex].quantity += quantity;
+            } else {
+                cart.products.push({ productId, quantity });
+            }
+            await cart.populate('products.productId');
+            cart.totalPrice = cart.products.reduce((acc, item) => {
+                if (item.productId && typeof item.productId.price === 'number') {
+                    return acc + (item.quantity * item.productId.price);
+                }
+                return acc;
+            }, 0);
+            await cart.save();
+            return res.status(200).json({ message: 'Cart has been updated successfully', cart });
+        } else {
+            const product = await PRODUCTS.findById(productId);
+            if (!product) {
+                return res.status(404).json({ message: 'product not found' });
+            }
+            const totalPrice = typeof product.price === 'number' ? quantity * product.price : 0;
+            cart = await new CART({
+                userId,
+                products: [{ productId, quantity }],
+                totalPrice
+            }).save();
+            await cart.populate('products.productId');
+            return res.status(201).json({ message: 'New cart has been created successfully', cart });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'something went wrong' });
+    }
+}
+module.exports = { getAllProducts, addToCart }
