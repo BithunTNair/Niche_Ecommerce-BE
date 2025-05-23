@@ -28,10 +28,11 @@ const productSchema = new mongoose.Schema({
         ref: 'users'
     },
     isVerified: {
-        type: Boolean,
-        default: false
+        type: String,
+        enum: ['approved', 'pending', 'rejected'],
+        default: 'pending'
     }
 });
 
 const products = mongoose.model('products', productSchema);
-module.exports = products
+module.exports = products;

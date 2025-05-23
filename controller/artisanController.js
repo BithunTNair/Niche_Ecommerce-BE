@@ -8,10 +8,9 @@ cloudinary.config({
 });
 
 const addProduct = (req, res) => {
+    const {aristanId} = req.params;
     const { name, category, description, price, stock } = req.body;
     try {
-        console.log('hitted');
-
         if (!req.file) {
             return res.send('File is not visible')
         }
@@ -28,7 +27,8 @@ const addProduct = (req, res) => {
                 description: description,
                 price: price,
                 stock: stock,
-                image: imageUrl
+                image: imageUrl,
+                aristanId: aristanId
             }).save();
             return res.status(200).json({ message: 'Product has been added successfully but not verified', product })
         })
