@@ -126,4 +126,18 @@ const filterProducts = async (req, res) => {
     }
 };
 
-module.exports = {getApprovedProducts, addToCart, removeFromCart, filterProducts};
+const getCart = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const cart = await CART.findOne({ userId }).populate('products.productId');
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+        return res.status(200).json({ message: 'Get your cart', cart });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'something went wrong' });
+    }
+};  
+
+module.exports = {getApprovedProducts, addToCart, removeFromCart, filterProducts, getCart};
