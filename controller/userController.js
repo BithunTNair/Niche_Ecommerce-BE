@@ -16,6 +16,27 @@ const getApprovedProducts = async (req, res) => {
     }
 }
 
+const getProductById = async (req, res) => {
+    console.log('hitted');
+
+    const productId = req.params.id;
+    console.log(productId);
+
+    try {
+        if (!productId) {
+            return res.status(400).json({ message: 'Product ID is required' });
+        }
+        const product = await PRODUCTS.findById(productId).populate('artisan', 'fullName email mobileNumber');
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        return res.status(200).json({ message: 'Get your product', product });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'something went wrong' });
+    }
+}
+
 const addToCart = async (req, res) => {
     const { userId } = req.params;
     const { productId, quantity } = req.body;
@@ -138,6 +159,6 @@ const getCart = async (req, res) => {
         console.log(error);
         return res.status(500).json({ message: 'something went wrong' });
     }
-};  
+};
 
-module.exports = {getApprovedProducts, addToCart, removeFromCart, filterProducts, getCart};
+module.exports = { getApprovedProducts, getProductById, addToCart, removeFromCart, filterProducts, getCart };

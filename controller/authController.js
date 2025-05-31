@@ -76,7 +76,7 @@ const createPassword = async (req, res) => {
     const { id } = req.params
     const { password } = req.body;
     try {
-        const currentUser = await USERS.findOne({ id });
+        const currentUser = await USERS.findById(id );
         console.log(currentUser);
 
         bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS), async function (err, hash) {
