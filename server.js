@@ -3,7 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 const DB = require('./config/db');
 const passport = require('passport');
-require('./config/passport'); // Ensure Google strategy is registered
+require('./config/passport'); 
 
 const app = express();
 DB();
